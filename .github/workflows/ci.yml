@@ -27,3 +27,10 @@ jobs:
       - name: Vérifier la syntaxe Python
         run: |
           python -m py_compile backend/app.py
+   docker:
+     runs-on: ubuntu-latest
+
+
+     steps:
+       - name: Recuperer le code
+         uses: actions/checkout@v4
