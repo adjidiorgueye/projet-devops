@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
   push:
@@ -31,9 +31,22 @@ jobs:
   docker:
     runs-on: ubuntu-latest
 
+    needs: test
+
     steps:
       - name: Recuperer le code
         uses: actions/checkout@v4
 
-      - name: Construire l'image Docker
-        run: docker build -t mon-projet-devops:latest .
+      - name: Connexion a Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Construire l'image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/mon-projet-devops:latest .
+
+      - name: Publier l'image
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mon-projet-devops:latest
