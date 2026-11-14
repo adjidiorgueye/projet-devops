@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Récupérer le code
+      - name: Recuperer le code
         uses: actions/checkout@v4
 
       - name: Installer Python
@@ -19,18 +19,63 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Installer les dépendances
+      - name: Installer les dependances
         run: |
           cd backend
           pip install -r requirements.txt
 
-      - name: Vérifier la syntaxe Python
+      - name: Verifier la syntaxe Python
         run: |
           python -m py_compile backend/app.py
-   docker:
-     runs-on: ubuntu-latest
 
+  docker:
+    runs-on: ubuntu-latest
 
-     steps:
-       - name: Recuperer le code
-         uses: actions/checkout@v4
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Construire l'image Docker
+        run: docker build -t mon-projet-devops:latest .
+EOFcd ~/formation-devops/projet-devops
+
+cat > .github/workflows/ci.yml <<'EOF'
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installer les dependances
+        run: |
+          cd backend
+          pip install -r requirements.txt
+
+      - name: Verifier la syntaxe Python
+        run: |
+          python -m py_compile backend/app.py
+
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Construire l'image Docker
+        run: docker build -t mon-projet-devops:latest .
