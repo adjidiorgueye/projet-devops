@@ -1,0 +1,20 @@
+services:
+  web:
+    build: .
+    container_name: mon-projet-web
+    ports:
+     - "8080:80"  
+  backend:
+    build: ./backend
+    container_name: mon-backend
+    ports:
+      - "5000:5000" 
+
+  db:
+    image: postgres:16
+    container_name: mon-projet-db
+    environment:
+     POSTGRES_USER: devops
+     POSTGRES_PASSWORD: devops123
+     POSTGRES_DB: projet
+  
